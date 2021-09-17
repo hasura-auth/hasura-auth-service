@@ -1,0 +1,47 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: hasura-auth
+    url: "http://kong-upstream:8900"
+    read_timeout: 60000
+    retries: 0
+    routes:
+      - name: hasura-auth-route
+        paths:
+          - /auth
+          - /auth/user
+          - /
+        strip_path: false
+        methods:
+          - GET
+          - POST
+          - OPTIONS
+          - PATCH
+
+plugins:
+  - name: correlation-id
+    service: hasura-auth
+    config:
+      echo_downstream: true
+
+  - name: rate-limiting
+    service: hasura-auth
+    config:
+      minute: 100
+
+  - name: bot-detection
+    service: hasura-auth
+
+  - name: cors
+    service: hasura-auth
+    config:
+      credentials: true
+      # preflight_continue: true
+      # exposed_headers:
+      #   - Access-Control-Allow-Headers
+      #   - Access-Control-Allow-Origin
+      #   - Access-Control-Allow-Credentials
+      origins:
+        - http://localhost:3000
+        - http://localhost:8900

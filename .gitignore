@@ -1,0 +1,8 @@
+node_modules/
+dist/
+test/.coverage/
+test/.nyc_output/
+**/.DS_Store
+yarn-error.log
+yarn.lock
+test/data.sqlite
