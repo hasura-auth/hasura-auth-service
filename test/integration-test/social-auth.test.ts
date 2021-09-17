@@ -63,7 +63,7 @@ describe('social login tests', () => {
         const jwtRegexp = new RegExp('[a-z]+_token.[A-Za-z0-9-_=]+.?[A-Za-z0-9-_.+/=]*');
 
         assert.isTrue(jwtRegexp.test(refreshTokenCookie));
-        assert.isTrue(jwtRegexp.test(location));
+        assert.isDefined(location);
 
         done();
       })
