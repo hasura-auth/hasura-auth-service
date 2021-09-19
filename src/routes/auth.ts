@@ -56,8 +56,8 @@ router.post(
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       domain: 'localhost',
-      secure: true,
-      sameSite: 'lax',
+      // secure: true,
+      // sameSite: 'lax',
       maxAge: ms(env.REFRESH_TOKEN_LIFETIME)
     });
 
@@ -77,7 +77,7 @@ router.get('/logout', (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/token/refresh', (req: Request, res: Response, next: NextFunction) => {
   const { refresh_token: incomingRefreshToken } = req.cookies as RefreshTokenCookie;
-  console.log('refresh ----------');
+  console.log('refresh ----------', incomingRefreshToken);
 
   verifyRefreshToken(incomingRefreshToken)
     .then(async (sub) => {
@@ -88,8 +88,8 @@ router.get('/token/refresh', (req: Request, res: Response, next: NextFunction) =
       res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
         domain: 'localhost',
-        secure: true,
-        sameSite: 'lax',
+        // secure: true,
+        // sameSite: 'lax',
         maxAge: ms(env.REFRESH_TOKEN_LIFETIME)
       });
 

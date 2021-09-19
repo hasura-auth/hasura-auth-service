@@ -12,8 +12,6 @@ const findOneByEmail = async (email: string): Promise<Account> => {
   return Account.findOne({
     where: { email }
   }).catch((e: Error) => {
-    console.log('##################ERROR');
-
     throw dbError(e.message);
   });
 };
@@ -69,7 +67,6 @@ const createWithDefualtRole = async (
       return account;
     })
     .catch((e: Error) => {
-      console.log('##################ERROR');
       throw dbError(e.message);
     });
 };
