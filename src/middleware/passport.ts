@@ -99,9 +99,11 @@ passport.use(
   new JwtStrategy(opts, async (jwt_payload, done) => {
     if (!jwt_payload.sub) return done('missing sub in token', null);
 
-    findOneByUuid(jwt_payload.sub)
-      .then((user) => done(null, user))
-      .catch((e: Error) => done(e.message, false));
+    done(null, jwt_payload.sub);
+
+    // findOneByUuid(jwt_payload.sub)
+    //   .then((user) => done(null, user))
+    //   .catch((e: Error) => done(e.message, false));
   })
 );
 
@@ -113,7 +115,7 @@ const passportUses = {
     passport.authenticate('github', { session: false })(req, res, next);
   },
   jwt: (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    passport.authenticate('jwt', { session: false }, (err, tokenUserUuid, info) => {
       if (err) {
         next(
           Builder<ServiceError>()
@@ -123,7 +125,7 @@ const passportUses = {
         );
       }
 
-      if (!user)
+      if (!tokenUserUuid)
         next(
           Builder<ServiceError>()
             .message('user is missing')
@@ -132,7 +134,7 @@ const passportUses = {
             .build()
         );
 
-      req.user = user;
+      req.user = tokenUserUuid;
       next();
     })(req, res, next);
   }

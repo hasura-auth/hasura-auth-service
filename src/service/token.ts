@@ -5,6 +5,7 @@ import ErrorSeverity from '../model/ErrorSeverity';
 import ErrorSource from '../model/ErrorType';
 import { Builder } from 'builder-pattern';
 import ServiceError from '../model/Error';
+import Session from '../db/models/session';
 
 const { env } = process;
 
@@ -49,7 +50,10 @@ const generateAccessToken = async (account: Account): Promise<string> => {
   );
 };
 
-const generateRefreshToken = async (account: Account): Promise<string> => {
+const generateRefreshToken = async (
+  account: Account,
+  session?: Session
+): Promise<string> => {
   if (!account || !account.roles) {
     throw Builder(ServiceError)
       .message('invalid account')
@@ -61,9 +65,9 @@ const generateRefreshToken = async (account: Account): Promise<string> => {
   return findOneByPurpose('refresh', ['keyId', 'private']).then(
     ({ keyId, private: privateKey }) => {
       const privateKeyAsBuffer = Buffer.from(privateKey, 'utf-8');
-      const uuidAsString = account.uuid.toString();
+      const sessionId = session.sessionId.toString();
 
-      return jwt.sign({ sub: uuidAsString }, privateKeyAsBuffer, {
+      return jwt.sign({ sub: sessionId }, privateKeyAsBuffer, {
         algorithm: 'RS512',
         expiresIn: env.REFRESH_TOKEN_LIFETIME,
         keyid: keyId

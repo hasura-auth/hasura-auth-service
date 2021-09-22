@@ -10,6 +10,7 @@ import logger from './config/logger';
 import router from './routes/auth';
 import socialRouter from './routes/social-login';
 import userRouter from './routes/user';
+import './config/session-ttl';
 
 import {
   customExceptionHandler,
@@ -27,15 +28,6 @@ app.use(cookieParser());
 app.use(
   express.static(path.join('/Users/rasti/Documents/github/hasura-auth-react', 'build'))
 );
-
-// app.use(
-//   cors({
-//     origin: 'http://localhost:3000',
-//     credentials: true,
-//     optionsSuccessStatus: 204,
-//     methods: ['GET', 'POST', 'OPTIONS']
-//   })
-// );
 
 app.use('/auth', router);
 app.use('/auth/social', socialRouter);

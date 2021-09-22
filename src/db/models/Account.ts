@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../../config/sequelize';
 import Role from './Role';
-import { v4 as uuid } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import OAuthProviders from '../../model/OAuthProvider';
 class Account extends Model {
   public id!: number;
@@ -17,7 +17,7 @@ class Account extends Model {
 Account.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    uuid: { type: DataTypes.UUIDV4, field: 'uuid', defaultValue: uuid() },
+    uuid: { type: DataTypes.UUIDV4, field: 'uuid', defaultValue: () => uuidv4() },
     name: { type: DataTypes.STRING },
     avatarUrl: { type: DataTypes.STRING, field: 'avatar_url' },
     email: { type: DataTypes.STRING, unique: true },
